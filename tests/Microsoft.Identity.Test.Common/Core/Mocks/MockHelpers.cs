@@ -314,6 +314,17 @@ namespace Microsoft.Identity.Test.Common.Core.Mocks
                 "{\"token_type\":\"" + tokenType + "\",\"expires_in\":\"" + expiry + "\",\"access_token\":\"" + token + "\"}");
         }
 
+        public static HttpResponseMessage CreateSuccessfulMsiResponseMessage(
+            string token = "header.payload.signature",
+            string expiry = "3599",
+            string tokenType = "Bearer")
+        {
+            string expiresOn = DateTimeHelpers.DateTimeToUnixTimestamp(DateTime.UtcNow.AddHours(1));
+            return CreateSuccessResponseMessage(
+          "{\"access_token\":\"" + TestConstants.ATSecret + "\",\"expires_on\":\"" + expiresOn + "\",\"resource\":\"https://management.azure.com/\",\"token_type\":" +
+          "\"Bearer\",\"client_id\":\"client_id\"}");
+        }
+
         public static HttpResponseMessage CreateSuccessTokenResponseMessage(
             string uniqueId,
             string displayableId,

@@ -250,6 +250,11 @@ namespace Microsoft.Identity.Test.Common.Core.Mocks
             return AddTokenResponse(httpManager, aadResponse);
         }
 
+        public static MockHttpMessageHandler AddMsiMocks(this MockHttpManager httpManager, TokenResponseType managedIdentityresponse, string endpoint)
+        {
+            return MsiTokenResponse(httpManager, managedIdentityresponse, endpoint);
+        }
+
         public static MockHttpMessageHandler AddTokenResponse(
             this MockHttpManager httpManager, 
             TokenResponseType responseType, 
@@ -292,6 +297,35 @@ namespace Microsoft.Identity.Test.Common.Core.Mocks
                 ExpectedRequestHeaders = expectedRequestHeaders,
                 ResponseMessage = responseMessage, 
             };
+            httpManager.AddMockHandler(responseHandler);
+
+            return responseHandler;
+        }
+
+        public static MockHttpMessageHandler MsiTokenResponse(
+            this MockHttpManager httpManager,
+            TokenResponseType responseType,
+            string expectedUrl)
+        {
+            HttpResponseMessage responseMessage;
+
+            switch (responseType)
+            {
+                case TokenResponseType.Valid_ManagedIdentityResponse:
+                    responseMessage = MockHelpers.CreateSuccessfulMsiResponseMessage();
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+
+            var responseHandler = new MockHttpMessageHandler()
+            {
+                ExpectedMethod = HttpMethod.Get,
+                ExpectedUrl = expectedUrl,
+                ResponseMessage = responseMessage,
+            };
+
             httpManager.AddMockHandler(responseHandler);
 
             return responseHandler;
@@ -463,6 +497,8 @@ namespace Microsoft.Identity.Test.Common.Core.Mocks
         /// <summary>
         /// Normal server exception
         /// </summary>
-        InvalidClient
+        InvalidClient,
+
+        Valid_ManagedIdentityResponse
     }
  }
