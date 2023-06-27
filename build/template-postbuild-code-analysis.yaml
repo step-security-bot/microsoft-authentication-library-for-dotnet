@@ -1,3 +1,16 @@
 # template-postbuild-code-analysis.yaml
 # Run post-build code analysis (e.g. Roslyn analyzers)
 
+steps:
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-roslynanalyzers.RoslynAnalyzers@3
+  displayName: 'Run Roslyn Analyzers'
+  inputs:
+    userProvideBuildInfo: auto
+  env:
+    system_accesstoken: $(System.AccessToken)
+  continueOnError: true
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2
+  displayName: 'Check Roslyn Results '
+  inputs:
+    GdnBreakGdnToolRoslynAnalyzers: true
