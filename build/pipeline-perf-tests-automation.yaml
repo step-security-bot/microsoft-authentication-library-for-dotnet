@@ -37,6 +37,15 @@ jobs:
       inputs:
         version: 6.x
 
+    - task: PowerShell@2
+      displayName: Install MAUI
+      inputs:
+        version: 5.x
+        targetType: 'inline'
+        script: |
+          dotnet workload install maui --source https://api.nuget.org/v3/index.json
+          dotnet workload install android --source https://api.nuget.org/v3/index.json 
+          
     - task: NuGetCommand@2
       displayName: 'NuGet restore'
       inputs:
